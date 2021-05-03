@@ -1,12 +1,8 @@
-// import important parts of sequelize library
 const { Model, DataTypes } = require('sequelize');
-// import our database connection from config.js
 const sequelize = require('../config/connection');
 
-// Initialize Product model (table) by extending off Sequelize's Model class
 class Blog extends Model {}
 
-// set up fields and rules for Product model
 Blog.init(
   {
     id: {
@@ -19,12 +15,8 @@ Blog.init(
       type: DataTypes.STRING,
       allowNull: false
     },
-    content: {
+    blog_content: {
       type: DataTypes.STRING,
-      allowNull: false
-    },
-    all_comments: {
-      type: DataTypes.INTEGER,
       allowNull: false
     },
     user_id: {
