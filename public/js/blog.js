@@ -1,12 +1,12 @@
 async function newFormHandler(event) {
   event.preventDefault();
   const title = document.querySelector('input[name="blog-title"]').value;
-  const blog_content = document.querySelector('input[name="blog-content"]').value;
+  const content = document.querySelector('input[name="blog-content"]').value;
   const response = await fetch(`/api/blogs`, {
     method: 'POST',
     body: JSON.stringify({
       title,
-      blog_content
+      content
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -22,13 +22,13 @@ async function newFormHandler(event) {
 async function editFormHandler(event) {
   event.preventDefault();
   const title = document.querySelector('input[name="blog-title"]').value;
-  const blog_content = document.querySelector('input[name="blog-content"]').value;
+  const content = document.querySelector('input[name="blog-content"]').value;
   const id = location.toString().split('/')[location.toString().split('/').length - 1];
-  const response = await fetch(`/api/posts/${id}`, {
+  const response = await fetch(`/api/blogss/${id}`, {
       method: 'PUT',
       body: JSON.stringify({
           title,
-          blog_content
+          content
       }),
       headers: {
           'Content-Type': 'application/json'

@@ -56,9 +56,9 @@ router.post('/', withAuth, (req, res) => {
 
 // update blog
 router.put('/:id', withAuth, (req, res) => {
-  Post.update({
+  Blog.update({
       title: req.body.title,
-      post_content: req.body.post_content
+      content: req.body.content
     },
     {
       where: {
@@ -79,7 +79,7 @@ router.put('/:id', withAuth, (req, res) => {
 });
 
 router.delete('/:id', withAuth, (req, res) => {
-  Post.destroy({
+  Blog.destroy({
     where: {
       id: req.params.id
     }
