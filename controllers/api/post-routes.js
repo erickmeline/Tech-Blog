@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 				}
 			}
 		]
-	}).then(dbPostData => res.json(dbPostData.reverse()))
+	}).then(response => res.json(response.reverse()))
 	.catch(err => {
 		res.status(500).json(err);
 	});
@@ -56,12 +56,12 @@ router.get('/:id', (req, res) => {
 				attributes: ['username']
 			}
 		}]
-	}).then(dbPostData => {
-		if (!dbPostData) {
+	}).then(response => {
+		if (!response) {
 			res.status(404).json({ message: `Post ${req.params.id} not found` });
 			return;
 		}
-		res.json(dbPostData);
+		res.json(response);
 	}).catch(err => {
 		res.status(500).json(err);
 	});
@@ -72,7 +72,7 @@ router.post('/', withAuth, (req, res) => {
 		title: req.body.title,
 		content: req.body.content,
 		user_id: req.session.user_id
-	}).then(dbPostData => res.json(dbPostData))
+	}).then(response => res.json(response))
 	.catch(err => {
 		res.status(500).json(err);
 	});
@@ -86,12 +86,12 @@ router.put('/:id', withAuth, (req, res) => {
 		where: {
 			id: req.params.id
 		}
-	}).then(dbPostData => {
-		if (!dbPostData) {
+	}).then(response => {
+		if (!response) {
 			res.status(404).json({ message: `Post ${req.params.id} not found` });
 			return;
 		}
-		res.json(dbPostData);
+		res.json(response);
 	}).catch(err => {
 		res.status(500).json(err);
 	});
@@ -102,12 +102,12 @@ router.delete('/:id', withAuth, (req, res) => {
 		where: {
 			id: req.params.id
 		}
-	}).then(dbPostData => {
-		if (!dbPostData) {
+	}).then(response => {
+		if (!response) {
 			res.status(404).json({ message: `Post ${req.params.id} not found` });
 			return;
 		}
-		res.json(dbPostData);
+		res.json(response);
 	}).catch(err => {
 		res.status(500).json(err);
 	});
