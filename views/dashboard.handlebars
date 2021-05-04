@@ -1,16 +1,11 @@
-{{#if blogs.length}}
+{{#if posts.length}}
 <section>
-  <h2>Your Blogs</h2>
-  {{#each blogs as |blog|}}
-  <div class="card">
-    <div class="card-header">
-      <h4><a class="link" href="/dashboard/edit/{{id}}">{{title}}</a></h4>
-    </div>
-  </div>
-  {{/each}}
+	<h2>Post History</h2>
+	{{#each posts as |post|}}
+	{{> dashboard-postinfo post}}
+	{{/each}}
+
 </section>
 {{/if}}
 
-<button type="submit" class="btn"><a class="link" href="/dashboard/new">+ New Blog</a></button>
-
-<script src="/javascript/blogs.js"></script>
+<button type="submit" class="btn"><a class="link" href="/dashboard/new">Add New Post</a></button>
