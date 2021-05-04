@@ -1,14 +1,19 @@
 const router = require('express').Router();
-const { Blog, User, Comment, BlogComment } = require('../../models');
+const { Blog, User, Comment } = require('../../models');
+const withAuth = require('../../utils/auth');
 
 // get all blogs
 router.get('/', (req, res) => {
   Blog.findAll({
+    order: [['created_at', 'DESC']],
     include: [
-      User,
       {
         model: Comment,
-        through: BlogComment
+        attributes: ['id', 'comment_text', 'blog_id', 'user_id', 'created_at'],
+        include: {
+          model: User,
+          attributes: ['username']
+        }
       }
     ]
   }).then((response) => {
@@ -23,20 +28,25 @@ router.get('/:id', (req, res) => {
       id: req.params.id
     },
     include: [
-      User,
       {
         model: Comment,
-        through: BlogComment
+        attributes: ['id', 'comment_text', 'blog_id', 'user_id', 'created_at'],
+        include: {
+          model: User,
+          attributes: ['username']
+        }
       }
     ]
+  }).then((response) => {
+    res.status(200).json(response);
   });
 });
 
 // create new blog
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
   Blog.create(req.body)
-    .then((product) => {
-      res.status(200).json(product);
+    .then((response) => {
+      res.status(200).json(response);
     })
     .catch((err) => {
       console.log(err);
@@ -45,47 +55,46 @@ router.post('/', (req, res) => {
 });
 
 // update blog
-router.put('/:id', (req, res) => {
-  Blog.update(req.body, {
-    where: {
-      id: req.params.id,
+router.put('/:id', withAuth, (req, res) => {
+  Post.update({
+      title: req.body.title,
+      post_content: req.body.post_content
     },
-  })
-    .then((blog) => {
-      return BlogComment.findAll({ where: { blog_id: req.params.id } });
+    {
+      where: {
+        id: req.params.id
+      }
     })
-    .then((blogComments) => {
-      const productTagIds = blogComments.map(({ comment_id }) => comment_id);
-      const newBlogComments = req.body.commentIds
-        .filter((comment_id) => !blogCommentIds.includes(comment_id))
-        .map((comment_id) => {
-          return {
-            blog_id: req.params.id,
-            comment_id,
-          };
-        });
-      const blogCommentsToRemove = blogComments
-        .filter(({ comment_id }) => !req.body.commentIds.includes(comment_id))
-        .map(({ id }) => id);
-      return Promise.all([
-        BlogComment.destroy({ where: { id: blogCommentsToRemove } }),
-        BlogComment.bulkCreate(newBlogComments),
-      ]);
+    .then(response => {
+      if (!response) {
+        res.status(404).json({ message: `Blog not found with id ${req.params.id}` });
+        return;
+      }
+      res.json(response);
     })
-    .then((updatedBlogComment) => res.json(updatedBlogComments))
-    .catch((err) => {
-      res.status(400).json(err);
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
     });
 });
 
-router.delete('/:id', (req, res) => {
-  Blog.destroy({
+router.delete('/:id', withAuth, (req, res) => {
+  Post.destroy({
     where: {
       id: req.params.id
     }
-  }).then((response) => {
-    res.status(200).json(response);
-  });
+  })
+    .then(response => {
+      if (!response) {
+        res.status(404).json({ message: `Blog not found with id ${req.params.id}` });
+        return;
+      }
+      res.json(response);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
