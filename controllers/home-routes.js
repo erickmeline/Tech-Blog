@@ -24,14 +24,14 @@ router.get('/', (req, res) => {
 		}]
 	}).then(response => {
 		const posts = response.map(post => post.get({ plain: true }));
-		res.render('homepage', { posts, loggedIn: req.session.loggedIn });
+		res.render('homepage', { posts, logged_in: req.session.logged_in });
 	}).catch(err => {
 		res.status(500).json(err);
 	});
 });
 
 router.get('/login', (req, res) => {
-	if (req.session.loggedIn) {
+	if (req.session.logged_in) {
 		res.redirect('/');
 		return;
 	}
@@ -71,7 +71,7 @@ router.get('/post/:id', (req, res) => {
 			return;
 		}
 		const post = response.get({ plain: true });
-		res.render('single-post', { post, loggedIn: req.session.loggedIn });
+		res.render('single-post', { post, logged_in: req.session.logged_in });
 	}).catch(err => {
 		res.status(500).json(err);
 	});
