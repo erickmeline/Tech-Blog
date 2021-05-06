@@ -52,8 +52,9 @@ router.post('/', (req, res) => {
 			req.session.username = response.username;
 			req.session.logged_in = true;
 			// res.json(response);
+			res.status(200).json('dashboard')
 		});
-	}).then((response) => res.status(200).json('dashboard'))
+	})//.then((response) => res.status(200).json('dashboard'))
 	.catch((err) => res.status(404).json('homepage'));
 });
 
@@ -76,6 +77,7 @@ router.post('/login', (req, res) => {
 			req.session.user_id = response.id;
 			req.session.username = response.username;
 			req.session.logged_in = true;
+			res.status(200).json('dashboard');
 			res.json({ user: response, message: 'logged in' });
 		});
 	}).then((response) => res.status(200).json('dashboard'));
