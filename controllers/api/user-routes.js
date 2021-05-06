@@ -51,9 +51,10 @@ router.post('/', (req, res) => {
 			req.session.user_id = response.id;
 			req.session.username = response.username;
 			req.session.logged_in = true;
-			res.json(response);
+			// res.json(response);
 		});
-	});
+	}).then((response) => res.status(200).json('dashboard'))
+	.catch((err) => res.status(404).json('homepage'));
 });
 
 router.post('/login', (req, res) => {
@@ -63,12 +64,12 @@ router.post('/login', (req, res) => {
 		}
 	}).then(response => {
 		if (!response) {
-			res.status(400).json({ message: `${req.body.email} not found` });
+			res.status(400).json('homepage');
 			return;
 		}
 		const validPassword = response.checkPassword(req.body.password);
 		if (!validPassword) {
-			res.status(400).json({ message: 'Invalid password' });
+			res.status(400).json('homepage');
 			return;
 		}
 		req.session.save(() => {
@@ -77,17 +78,17 @@ router.post('/login', (req, res) => {
 			req.session.logged_in = true;
 			res.json({ user: response, message: 'logged in' });
 		});
-	});
+	}).then((response) => res.status(200).json('dashboard'));
 });
 
 router.post('/logout', (req, res) => {
 	if (req.session.logged_in) {
 		req.session.destroy(() => {
-			res.status(204).end();
+			res.status(204).render('homepage').end();
 		});
 	}
 	else {
-		res.status(404).end();
+		res.status(404).render('homepage').end();
 	}
 });
 
